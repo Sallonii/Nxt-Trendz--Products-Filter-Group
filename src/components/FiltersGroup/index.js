@@ -3,7 +3,7 @@ import {BsSearch} from 'react-icons/bs'
 import './index.css'
 
 const FiltersGroup = props => {
-  const {onSearchText, onEnterSearch, clearFilter, onClickingCategory} = props
+  const {onSearchText, onEnterSearch, clearFilter} = props
 
   const onChangingInput = event => {
     onSearchText(event.target.value)
@@ -30,7 +30,7 @@ const FiltersGroup = props => {
           placeholder="Search"
           value={titleSearch}
           onChange={onChangingInput}
-          onKeyUp={onEnter}
+          onKeyDown={onEnter}
         />
         <BsSearch className="search-icon" />
       </div>
@@ -40,24 +40,29 @@ const FiltersGroup = props => {
   const renderCategoryElements = () => {
     const {categoryOptions} = props
 
-    return categoryOptions.map(category => {
-      const {changeCategory, activeCategoryId} = props
-      const onClickCategoryItem = () => changeCategory(category.categoryId)
-      const isActive = category.categoryId === activeCategoryId
-      const categoryClassName = isActive
-        ? `category-name active-category-name`
-        : `category-name`
+    return (
+      <div>
+        <h1>Category</h1>
+        {categoryOptions.map(category => {
+          const {changeCategory, activeCategoryId} = props
+          const onClickCategoryItem = () => changeCategory(category.categoryId)
+          const isActive = category.categoryId === activeCategoryId
+          const categoryClassName = isActive
+            ? `category-name active-category-name`
+            : `category-name`
 
-      return (
-        <li
-          className="category-li-item"
-          onClick={onClickCategoryItem}
-          key={category.categoryId}
-        >
-          <p>{category.name}</p>
-        </li>
-      )
-    })
+          return (
+            <li
+              className="category-li-item"
+              onClick={onClickCategoryItem}
+              key={category.categoryId}
+            >
+              <p className={categoryClassName}>{category.name}</p>
+            </li>
+          )
+        })}
+      </div>
+    )
   }
 
   const renderRatingElements = () => {
@@ -66,22 +71,29 @@ const FiltersGroup = props => {
     return (
       <ul>
         <h1>Rating</h1>
-        {ratingsList.map(eachItem => (
-          <li className="rating-li-item">
-            <img
-              src={eachItem.imageUrl}
-              alt="rating"
-              className="rating-image"
-            />
-            <p>%up</p>
-          </li>
-        ))}
+        {ratingsList.map(eachRating => {
+          const {ratingClicked} = props
+
+          const onClickingRating = () => {
+            ratingClicked(eachRating.ratingId)
+          }
+          return (
+            <li className="rating-li-item" onClick={onClickingRating}>
+              <img
+                src={eachRating.imageUrl}
+                alt={`rating ${eachRating.ratingId}`}
+                className="rating-image"
+              />
+              <p>%up</p>
+            </li>
+          )
+        })}
         <button
           type="button"
           className="clear-filter-btn"
           onClick={onClearFilter}
         >
-          Clear Filter
+          Clear Filters
         </button>
       </ul>
     )
