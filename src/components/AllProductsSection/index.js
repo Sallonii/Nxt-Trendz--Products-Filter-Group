@@ -79,7 +79,7 @@ class AllProductsSection extends Component {
     activeOptionId: sortbyOptions[0].optionId,
     titleSearch: '',
     categoryId: '',
-    rating: '',
+    ratingId: '',
   }
 
   componentDidMount() {
@@ -94,8 +94,8 @@ class AllProductsSection extends Component {
 
     // TODO: Update the code to get products with filters applied
 
-    const {activeOptionId, categoryId, titleSearch, rating} = this.state
-    const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${categoryId}&title_search=${titleSearch}&rating=${rating}`
+    const {activeOptionId, categoryId, titleSearch, ratingId} = this.state
+    const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${categoryId}&title_search=${titleSearch}&rating=${ratingId}`
     const options = {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -129,8 +129,11 @@ class AllProductsSection extends Component {
   renderProductsList = () => {
     const {productsList, activeOptionId} = this.state
 
+    const showProductsList = productsList.length > 0
+
     // TODO: Add No Products View
-    return (
+
+    return showProductsList ? (
       <div className="all-products-container">
         <ProductsHeader
           activeOptionId={activeOptionId}
@@ -142,6 +145,16 @@ class AllProductsSection extends Component {
             <ProductCard productData={product} key={product.id} />
           ))}
         </ul>
+      </div>
+    ) : (
+      <div className="no-products-container">
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-no-products-view.png"
+          alt="no products"
+          className="no-products"
+        />
+        <h1>No Products Found</h1>
+        <p>We could not find any products. Try other filters.</p>
       </div>
     )
   }
@@ -174,6 +187,8 @@ class AllProductsSection extends Component {
         return this.renderProductsList()
       case activeStatusConstants.inProgress:
         return this.renderLoader()
+      case activeStatusConstants.failure:
+        return this.renderFailure()
       default:
         return null
     }
@@ -189,7 +204,7 @@ class AllProductsSection extends Component {
 
   clearFilter = () => {
     this.setState(
-      {categoryId: '', rating: '', titleSearch: ''},
+      {categoryId: '', ratingId: '', titleSearch: ''},
       this.getProducts,
     )
   }
@@ -198,8 +213,13 @@ class AllProductsSection extends Component {
     this.setState({categoryId}, this.getProducts)
   }
 
+  ratingClicked = ratingId => {
+    this.setState({ratingId}, this.getProducts)
+  }
+
   render() {
-    const {titleSearch} = this.state
+    const {titleSearch, categoryId} = this.state
+
     return (
       <div className="all-products-section">
         {/* TODO: Update the below element */}
@@ -211,6 +231,8 @@ class AllProductsSection extends Component {
           onEnterSearch={this.onEnterSearch}
           clearFilter={this.clearFilter}
           changeCategory={this.changeCategory}
+          activeCategoryId={categoryId}
+          ratingClicked={this.ratingClicked}
         />
         {this.getAllProducts()}
       </div>
