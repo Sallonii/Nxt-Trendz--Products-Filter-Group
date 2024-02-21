@@ -48,3 +48,15 @@
   flex-wrap: wrap;
   padding-left: 0;
 }
+.no-products-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+@media screen and (max-width: 767px) {
+  .no-products {
+    height: 200px;
+  }
+}
