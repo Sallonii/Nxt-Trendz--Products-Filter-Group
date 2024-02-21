@@ -27,6 +27,7 @@
 }
 .category-li-item {
   list-style-type: none;
+  cursor: pointer;
 }
 .rating-li-item {
   list-style-type: none;
@@ -43,4 +44,11 @@
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
+}
+.category-name {
+  color: #64748b;
+}
+.active-category-name {
+  color: #0967d2;
+  font-weight: 700;
 }
